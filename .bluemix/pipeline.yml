@@ -20,7 +20,6 @@ stages:
   jobs:
   - name: Build
     type: builder
-    build_type: npm
 - name: DEPLOY
   inputs:
   - type: job
