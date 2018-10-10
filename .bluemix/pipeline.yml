@@ -20,6 +20,11 @@ stages:
   jobs:
   - name: Build
     type: builder
+    build_type: npm
+    script: |
+      #!/bin/bash
+      export PATH=/opt/IBM/node-v6.7.0/bin:$PATH
+      npm install
 - name: DEPLOY
   inputs:
   - type: job
