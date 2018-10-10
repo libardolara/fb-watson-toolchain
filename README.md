@@ -1,10 +1,10 @@
-# Develop a Cloud Foundry app with GitHub.com
+# Desplegar a IBM Cloud Functions una app
 
-This Hello World application uses Node.js and includes a DevOps toolchain that is preconfigured for continuous delivery, source control, issue tracking, and online editing.
+Esta aplicacion integra Facebook Messeger con Watson Assistant, Visual Recognition y Discovery. Esta desarrollada en NodeJS y el codigo se encuentra en el repositorio https://github.com/libardolara/fb-watson
 
-To get started, click **Create toolchain**.
+Comienza haciendo click en **Create toolchain**.
 
-[![Deploy To Bluemix](https://console.bluemix.net/devops/graphics/create_toolchain_button.png)](https://console.bluemix.net/devops/setup/deploy/?repository=https%3A//github.com/libardolara/simple-toolchain)
+[![Deploy To Bluemix](https://console.bluemix.net/devops/graphics/create_toolchain_button.png)](https://console.bluemix.net/devops/setup/deploy/?repository=https%3A//github.com/libardolara/fb-watson-toolchain)
 
-For more information about toolchains, see [Custom toolchains in one click with IBM Bluemix DevOps Services](https://developer.ibm.com/devops-services/2016/06/16/open-toolchain-with-ibm-bluemix-devops-services/).
+
 
