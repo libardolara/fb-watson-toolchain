@@ -41,13 +41,11 @@ stages:
       zip -r action.zip main.js package* node_modules
       echo ">>> Lista de archivos…"
       ls -lh
-      echo ">>> Checking installed version of IBM Cloud CLI…"
-      #bx help
       echo ">>> Logging into IBM Cloud…"
-      echo $API_KEY
+      export BLUEMIX_API_KEY=$API_KEY
       echo $PROD_SPACE_NAME
       echo $PROD_ORG_NAME
-      bx login –apikey $API_KEY -a api.ng.bluemix.net -o "$PROD_ORG_NAME" -s "$PROD_SPACE_NAME"
+      bx login -a api.ng.bluemix.net -o "$PROD_ORG_NAME" -s "$PROD_SPACE_NAME"
       echo ">>> Currently Deployed Packages:"
       bx wsk package list
       echo ">>> Currently Deployed Actions:"
