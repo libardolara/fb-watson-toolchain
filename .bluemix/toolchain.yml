@@ -13,17 +13,17 @@ template:
     - sample-repo
   info:
     git url: >-
-      [https://github.com/libardolara/simple-toolchain](https://github.com/libardolara/simple-toolchain)
+      [https://github.com/libardolara/fb-watson-toolchain](https://github.com/libardolara/fb-watson-toolchain)
     git branch: >-
-      [master](https://github.com/libardolara/simple-toolchain/tree/master)
+      [master](https://github.com/libardolara/fb-watson-toolchain/tree/master)
 toolchain:
-  name: 'simple-toolchain-{{timestamp}}'
+  name: 'fb-watson-toolchain-{{timestamp}}'
   template:
     getting_started:
       $ref: "#/messages/template.gettingStarted"
 services:
   sample-repo:
-    service_id: githubpublic
+    service_id: hostedgit
     parameters:
       repo_name: '{{toolchain.name}}'
       repo_url: 'https://github.com/libardolara/fb-watson'
