@@ -7,57 +7,56 @@ stages:
     service: ${SAMPLE_REPO}
   triggers:
   - type: commit
+  properties:
+  - name: API_KEY
+    value: ${API_KEY}
+    type: text
+  - name: PROD_ORG_NAME
+    value: ${PROD_ORG_NAME}
+    type: text
+  - name: PROD_SPACE_NAME
+    value: ${PROD_SPACE_NAME}
+    type: text
   jobs:
   - name: Build
-    type: builder
-- name: DEPLOY
-  inputs:
-  - type: job
-    stage: BUILD
-    job: Build
-  triggers:
-  - type: stage
-  properties:
-  - name: CF_APP_NAME
-    value: undefined
-    type: text
-  - name: APP_URL
-    value: undefined
-    type: text
-  jobs:
-  - name: Blue-Green Deploy
-    type: deployer
-    target:
-      region_id: ${PROD_REGION_ID}
-      organization: ${PROD_ORG_NAME}
-      space: ${PROD_SPACE_NAME}
-      application: ${CF_APP_NAME}
-      api_key: ${API_KEY}
+    type: npm
     script: |
-      #!/bin/bash
-      # Push app
-      if ! cf app $CF_APP; then  
-        cf push $CF_APP
-      else
-        OLD_CF_APP=${CF_APP}-OLD-$(date +"%s")
-        rollback() {
-          set +e  
-          if cf app $OLD_CF_APP; then
-            cf logs $CF_APP --recent
-            cf delete $CF_APP -f
-            cf rename $OLD_CF_APP $CF_APP
-          fi
-          exit 1
-        }
-        set -e
-        trap rollback ERR
-        cf rename $CF_APP $OLD_CF_APP
-        cf push $CF_APP
-        cf delete $OLD_CF_APP -f
-      fi
-      # Export app name and URL for use in later Pipeline jobs
-      export CF_APP_NAME="$CF_APP"
-      export APP_URL=http://$(cf app $CF_APP_NAME | grep -e urls: -e routes: | awk '{print $2}')
-      # View logs
-      #cf logs "${CF_APP}" --recent
-      
+    #!/bin/bash
+    # The default Node.js version is 0.10.40
+    # To use Node.js 0.10.48, uncomment the following line:
+    #export PATH=/opt/IBM/node-v0.10.48/bin:$PATH
+    # To use Node.js 0.12.7, uncomment the following line:
+    #export PATH=/opt/IBM/node-v0.12/bin:$PATH
+    # To use Node.js 4.4.5, uncomment the following line:
+    #export PATH=/opt/IBM/node-v4.4.5/bin:$PATH
+    # To use Node.js 6.7.0, uncomment the following line:
+    export PATH=/opt/IBM/node-v6.7.0/bin:$PATH
+    npm install
+    ls -lh
+
+    #!/bin/bash
+    echo ">>> Lista de archivos…"
+    #ls -lh
+    echo ">>> Hace el .zip…"
+    zip -r action.zip main.js package* node_modules
+    echo ">>> Lista de archivos…"
+    ls -lh
+    echo ">>> Checking installed version of IBM Cloud CLI…"
+    bx help
+    echo ">>> Logging into IBM Cloud…"
+    echo $API_KEY
+    echo $PROD_SPACE_NAME
+    echo $PROD_ORG_NAME
+    bx login –apikey $API_KEY -a api.ng.bluemix.net -o "$PROD_ORG_NAME" -s "$PROD_SPACE_NAME"
+
+    echo ">>> Currently Deployed Packages:"
+    bx wsk package list
+    echo ">>> Currently Deployed Actions:"
+    bx wsk action list
+    echo ">>> Currently Deployed Triggers:"
+    bx wsk trigger list
+    echo ">>> Currently Deployed Rules:"
+    bx wsk rule list
+    echo ">>> Deploying Actions Using WhiskDeploy…"
+    bx wsk action update fb-watson action.zip --kind nodejs:6 --web true --param-file params.json
+    echo ">>> Successfully Deployed Actions."
