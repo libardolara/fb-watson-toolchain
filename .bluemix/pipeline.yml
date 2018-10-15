@@ -21,39 +21,22 @@ stages:
   - name: Build
     type: builder
     artifact_dir: ''
-    build_type: npm
+    build_type: shell
     script: |
       #!/bin/bash
-      # The default Node.js version is 0.10.40
-      # To use Node.js 0.10.48, uncomment the following line:
-      #export PATH=/opt/IBM/node-v0.10.48/bin:$PATH
-      # To use Node.js 0.12.7, uncomment the following line:
-      #export PATH=/opt/IBM/node-v0.12/bin:$PATH
-      # To use Node.js 4.4.5, uncomment the following line:
-      #export PATH=/opt/IBM/node-v4.4.5/bin:$PATH
-      # To use Node.js 6.7.0, uncomment the following line:
-      export PATH=/opt/IBM/node-v6.7.0/bin:$PATH
-      npm install
-      #!/bin/bash
-      echo ">>> Lista de archivos…"
-      #ls -lh
-      echo ">>> Hace el .zip…"
-      zip -r action.zip main.js package* node_modules
-      echo ">>> Lista de archivos…"
-      ls -lh
-      echo ">>> Logging into IBM Cloud…"
-      export BLUEMIX_API_KEY=$API_KEY
-      echo $PROD_SPACE_NAME
-      echo $PROD_ORG_NAME
-      bx login -a api.ng.bluemix.net -o "$PROD_ORG_NAME" -s "$PROD_SPACE_NAME"
-      echo ">>> Currently Deployed Packages:"
-      bx wsk package list
-      echo ">>> Currently Deployed Actions:"
-      bx wsk action list
-      echo ">>> Currently Deployed Triggers:"
-      bx wsk trigger list
-      echo ">>> Currently Deployed Rules:"
-      bx wsk rule list
-      echo ">>> Deploying Actions Using WhiskDeploy…"
-      bx wsk action update fb-watson action.zip --kind nodejs:6 --web true --param-file params.json
-      echo ">>> Successfully Deployed Actions."
+          echo ">>> Logging into IBM Cloud…"
+          echo $PROD_SPACE_NAME
+          echo $PROD_ORG_NAME
+          bx login --apikey $API_KEY -a api.ng.bluemix.net -o "$PROD_ORG_NAME" -s "$PROD_SPACE_NAME"
+          echo ">>> Currently Deployed Packages:"
+          bx wsk package list
+          echo ">>> Currently Deployed Actions:"
+          bx wsk action list
+          echo ">>> Currently Deployed Triggers:"
+          bx wsk trigger list
+          echo ">>> Currently Deployed Rules:"
+          bx wsk rule list
+          echo ">>> Lista de archivos…"
+          ls -lh
+          echo ">>> Deploying…"
+          bx wsk action update fb-watson main.js --kind nodejs:8 --web true --param-file params.json
