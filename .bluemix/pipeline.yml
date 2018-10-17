@@ -17,6 +17,9 @@ stages:
   - name: PROD_SPACE_NAME
     value: ${PROD_SPACE_NAME}
     type: text
+  - name: CF_APP
+    value: ${CF_APP_NAME}
+    type: text
   jobs:
   - name: Build
     type: builder
@@ -39,4 +42,4 @@ stages:
           echo ">>> Lista de archivos…"
           ls -lh
           echo ">>> Deploying…"
-          bx wsk action update fb-watson main.js --kind nodejs:8 --web true --param-file params.json
+          bx wsk action update $CF_APP main.js --kind nodejs:8 --web true --param-file params.json
